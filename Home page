@@ -1,0 +1,341 @@
+"""
+iLoveStructural - Unified Engineering Tools Platform
+Home page with tool navigation
+"""
+
+import streamlit as st
+from datetime import datetime
+
+# ============================================================================
+# PAGE CONFIG
+# ============================================================================
+
+st.set_page_config(
+    page_title="iLoveStructural - Engineering Tools",
+    page_icon="🏗️",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# ============================================================================
+# CUSTOM CSS
+# ============================================================================
+
+st.markdown("""
+<style>
+    /* Main container */
+    .main {
+        padding: 0;
+    }
+    
+    /* Header styling */
+    .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        border-bottom: 4px solid #667eea;
+    }
+    
+    .header h1 {
+        font-size: 3rem;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+    
+    .header p {
+        font-size: 1.2rem;
+        margin: 0.5rem 0 0 0;
+        opacity: 0.95;
+    }
+    
+    /* Tools container */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 3rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* Tool card */
+    .tool-card-wrapper {
+        perspective: 1000px;
+    }
+    
+    .tool-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: 2px solid transparent;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .tool-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 16px 40px rgba(102, 126, 234, 0.2);
+        border-color: #667eea;
+    }
+    
+    .tool-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .tool-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #333;
+        margin: 1rem 0 0.5rem 0;
+    }
+    
+    .tool-desc {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+    
+    .tool-status {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: auto;
+    }
+    
+    .status-active {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .status-new {
+        background: #fff3e0;
+        color: #e65100;
+    }
+    
+    /* Back button */
+    .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+    }
+    
+    /* Tool page header */
+    .tool-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .tool-header h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .tool-header-icon {
+        font-size: 3rem;
+    }
+    
+    /* Footer */
+    .footer {
+        background: #f8f9fa;
+        color: #666;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+        border-top: 1px solid #e0e0e0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================================================
+# SESSION STATE FOR NAVIGATION
+# ============================================================================
+
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "home"
+
+# ============================================================================
+# TOOL DEFINITIONS
+# ============================================================================
+
+TOOLS = {
+    "staircase": {
+        "name": "Staircase Designer",
+        "icon": "🏗️",
+        "description": "Design custom staircases with parametric reinforcement scheduling. Automatically calculates riser heights, reinforcement patterns, and material quantities.",
+        "status": "new",
+        "module": "tools.staircase_designer",
+    },
+    "beam": {
+        "name": "Beam Detail Designer",
+        "icon": "🌉",
+        "description": "Design and detail reinforced concrete beams with automatic rebar scheduling and detailing as per standards.",
+        "status": "active",
+        "module": "tools.tool2",
+    },
+    "tool3": {
+        "name": "Tool 3",
+        "icon": "🔧",
+        "description": "Advanced engineering calculation tool with real-time analysis and optimization.",
+        "status": "active",
+        "module": "tools.tool3",
+    },
+    "tool4": {
+        "name": "Tool 4",
+        "icon": "⚙️",
+        "description": "Specialized structural design tool for complex configurations.",
+        "status": "active",
+        "module": "tools.tool4",
+    },
+    "tool5": {
+        "name": "Tool 5",
+        "icon": "🛠️",
+        "description": "Additional engineering utility for quick calculations and analysis.",
+        "status": "active",
+        "module": "tools.tool5",
+    },
+}
+
+# ============================================================================
+# HOME PAGE
+# ============================================================================
+
+if st.session_state.current_page == "home":
+    
+    # Header
+    st.markdown("""
+    <div class="header">
+        <h1>🏗️ iLoveStructural</h1>
+        <p>Professional Engineering Design Tools Platform</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("")  # Spacer
+    
+    # Tools grid
+    st.markdown("""
+    <div class="tools-grid">
+    """, unsafe_allow_html=True)
+    
+    cols = st.columns(3)
+    
+    for idx, (tool_id, tool_info) in enumerate(TOOLS.items()):
+        col = cols[idx % 3]
+        
+        with col:
+            # Create clickable card
+            if st.button(
+                f"""
+{tool_info['icon']}
+
+**{tool_info['name']}**
+
+{tool_info['description']}
+                """,
+                key=f"tool_btn_{tool_id}",
+                use_container_width=True,
+                help=f"Click to open {tool_info['name']}",
+            ):
+                st.session_state.current_page = tool_id
+                st.rerun()
+            
+            # Status badge
+            status_class = "status-new" if tool_info["status"] == "new" else "status-active"
+            status_text = "🆕 NEW" if tool_info["status"] == "new" else "✅ ACTIVE"
+            
+            st.markdown(
+                f'<div class="tool-status {status_class}">{status_text}</div>',
+                unsafe_allow_html=True
+            )
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Footer
+    st.markdown(f"""
+    <div class="footer">
+        <p><strong>iLoveStructural</strong> © {datetime.now().year} | Professional Engineering Design</p>
+        <p style="font-size: 0.9rem; color: #999;">All tools are production-ready and standards-compliant</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ============================================================================
+# TOOL PAGES
+# ============================================================================
+
+else:
+    tool_id = st.session_state.current_page
+    tool_info = TOOLS.get(tool_id, {})
+    
+    # Back button in sidebar
+    with st.sidebar:
+        if st.button("← Back to Home", use_container_width=True):
+            st.session_state.current_page = "home"
+            st.rerun()
+    
+    # Tool header
+    st.markdown(f"""
+    <div class="tool-header">
+        <div class="tool-header-icon">{tool_info.get('icon', '🔧')}</div>
+        <div>
+            <h1>{tool_info.get('name', 'Tool')}</h1>
+            <p>{tool_info.get('description', '')}</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Load and run the tool
+    try:
+        module_name = tool_info.get("module")
+        
+        if module_name == "tools.staircase_designer":
+            # Import and run staircase tool
+            from tools.staircase_designer import run
+            run()
+        
+        elif module_name == "tools.tool2":
+            # Import and run tool 2
+            from tools.tool2 import run
+            run()
+        
+        elif module_name == "tools.tool3":
+            from tools.tool3 import run
+            run()
+        
+        elif module_name == "tools.tool4":
+            from tools.tool4 import run
+            run()
+        
+        elif module_name == "tools.tool5":
+            from tools.tool5 import run
+            run()
+        
+        else:
+            st.error(f"Tool module {module_name} not found")
+    
+    except ImportError as e:
+        st.error(f"Could not load tool: {str(e)}")
+        st.info(f"Make sure the tool module exists in the tools/ folder")
+    
+    except Exception as e:
+        st.error(f"Error running tool: {str(e)}")
+        st.info("Check the tool's run() function for errors")
